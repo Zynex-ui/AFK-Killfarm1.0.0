@@ -1,2 +1,123 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+local Player = game.Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+-- Function to reset the player's character
+local function resetCharacter(player)
+    if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.Health = 0
+    end
+end
+
+-- Bind the reset function to a key press (e.g., "R" key)
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode.R then
+            resetCharacter(Player)
+        end
+    end
+end)
+
+-- Create a simple UI frame to hold the buttons
+local ScreenGui = Instance.new("ScreenGui")
+local ButtonFrame = Instance.new("Frame")
+local ResetButton = Instance.new("TextButton")
+local InfiniteYieldButton = Instance.new("TextButton")
+local CloseButton = Instance.new("TextButton")
+
+ScreenGui.Parent = Player:WaitForChild("PlayerGui")
+
+ButtonFrame.Parent = ScreenGui
+ButtonFrame.Size = UDim2.new(0, 300, 0, 200)
+ButtonFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+ButtonFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ButtonFrame.BorderSizePixel = 0
+
+ResetButton.Parent = ButtonFrame
+ResetButton.Size = UDim2.new(0, 200, 0, 50)
+ResetButton.Position = UDim2.new(0.5, -100, 0, 10)
+ResetButton.Text = "Reset Character (R)"
+
+local wasDragged = false
+
+ResetButton.MouseButton1Click:Connect(function()
+    if not wasDragged then
+        resetCharacter(Player)
+    end
+    wasDragged = false
+end)
+
+-- Button to open Infinite Yield
+InfiniteYieldButton.Parent = ButtonFrame
+InfiniteYieldButton.Size = UDim2.new(0, 200, 0, 50)
+InfiniteYieldButton.Position = UDim2.new(0.5, -100, 0, 70)
+InfiniteYieldButton.Text = "Open Infinite Yield"
+
+InfiniteYieldButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+
+-- Close button to hide the UI
+CloseButton.Parent = ButtonFrame
+CloseButton.Size = UDim2.new(0, 20, 0, 20)
+CloseButton.Position = UDim2.new(1, -25, 0, 5)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui.Enabled = false
+end)
+
+-- Make the frame draggable
+local function makeFrameDraggable(frame)
+    local dragging = false
+    local dragInput, mousePos, framePos
+
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            wasDragged = false
+            mousePos = input.Position
+            framePos = frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - mousePos
+            if delta.Magnitude > 5 then -- Threshold to consider it a drag
+                wasDragged = true
+            end
+            frame.Position = UDim2.new(
+                framePos.X.Scale,
+                framePos.X.Offset + delta.X,
+                framePos.Y.Scale,
+                framePos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+makeFrameDraggable(ButtonFrame)
+
+-- Bind the "Right Shift" key to show the UI again
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode.RightShift then
+            ScreenGui.Enabled = true
+        end
+    end
+end)
