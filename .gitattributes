@@ -121,15 +121,28 @@ InfiniteYieldButton.MouseButton1Click:Connect(function()
     wasDragged = false
 end)
 
--- Close button to hide the UI
-CloseButton.Parent = ButtonFrame
-CloseButton.Size = UDim2.new(0, 200, 0, 50)
-CloseButton.Position = UDim2.new(0.5, -100, 0, 130)
-CloseButton.Text = "Close UI"
-
 CloseButton.MouseButton1Click:Connect(function()
     if not wasDragged then
         ScreenGui.Enabled = false
     end
     wasDragged = false
+end)
+makeFrameDraggable(ButtonFrame)
+
+-- Bind the "Right Shift" key to show the UI again
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode.RightShift then
+            ScreenGui.Enabled = true
+        end
+    end
+end)
+
+-- Bind the "0" key to toggle the UI
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode.Zero then
+            ScreenGui.Enabled = not ScreenGui.Enabled
+        end
+    end
 end)
