@@ -1,148 +1,131 @@
-local Player = game.Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-
--- Function to reset the player's character
-local function resetCharacter(player)
-    if player and player.Character and player.Character:FindFirstChild("Humanoid") then
-        player.Character.Humanoid.Health = 0
-    end
-end
-
--- Bind the reset function to a key press (e.g., "R" key)
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed then
-        if input.KeyCode == Enum.KeyCode.R then
-            resetCharacter(Player)
-        end
-    end
-end)
-
--- Create a simple UI frame to hold the buttons
+-- Create the main UI frame
 local ScreenGui = Instance.new("ScreenGui")
-local ButtonFrame = Instance.new("Frame")
-local ResetButton = Instance.new("TextButton")
-local InfiniteYieldButton = Instance.new("TextButton")
-local CloseButton = Instance.new("TextButton")
-
-ScreenGui.Parent = Player:WaitForChild("PlayerGui")
-
-ButtonFrame.Parent = ScreenGui
-ButtonFrame.Size = UDim2.new(0, 300, 0, 200)
-ButtonFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-ButtonFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-ButtonFrame.BorderSizePixel = 0
-
--- Create a UICorner instance for smooth corners
+local MainFrame = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 12) -- Adjust the corner radius as needed
-UICorner.Parent = ButtonFrame
+local InfiniteYieldButton = Instance.new("TextButton")
+local ResetButton = Instance.new("TextButton")
+local DcRoomButton = Instance.new("TextButton")
+local TweenService = game:GetService("TweenService")
 
-ResetButton.Parent = ButtonFrame
-ResetButton.Size = UDim2.new(0, 200, 0, 50)
-ResetButton.Position = UDim2.new(0.5, -100, 0, 10)
-ResetButton.Text = "Reset Character (R)"
+-- Set properties for ScreenGui
+ScreenGui.Name = "CustomUI"
+ScreenGui.Parent = game.CoreGui
 
-local wasDragged = false
+-- Set properties for MainFrame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
+MainFrame.Size = UDim2.new(0, 200, 0, 150)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
-ResetButton.MouseButton1Click:Connect(function()
-    if not wasDragged then
-        resetCharacter(Player)
-    end
-    wasDragged = false
+-- Set properties for UICorner to make smooth edges
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+-- Set properties for InfiniteYieldButton
+InfiniteYieldButton.Name = "InfiniteYieldButton"
+InfiniteYieldButton.Parent = MainFrame
+InfiniteYieldButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+InfiniteYieldButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+InfiniteYieldButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+InfiniteYieldButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+InfiniteYieldButton.Font = Enum.Font.SourceSans
+InfiniteYieldButton.Text = "Infinite Yield"
+InfiniteYieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfiniteYieldButton.TextSize = 14
+
+-- Set properties for ResetButton
+ResetButton.Name = "ResetButton"
+ResetButton.Parent = MainFrame
+ResetButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ResetButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+ResetButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+ResetButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+ResetButton.Font = Enum.Font.SourceSans
+ResetButton.Text = "Reset"
+ResetButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ResetButton.TextSize = 14
+
+-- Set properties for DcRoomButton
+DcRoomButton.Name = "DcRoomButton"
+DcRoomButton.Parent = MainFrame
+DcRoomButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+DcRoomButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+DcRoomButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+DcRoomButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+DcRoomButton.Font = Enum.Font.SourceSans
+DcRoomButton.Text = "DC Room"
+DcRoomButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DcRoomButton.TextSize = 14
+
+-- Function to open Infinite Yield
+InfiniteYieldButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
--- Function to make a frame draggable
-local function makeFrameDraggable(frame)
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
+-- Function to reset the avatar
+ResetButton.MouseButton1Click:Connect(function()
+    game.Players.LocalPlayer.Character:BreakJoints()
+end)
 
-    local function update(input)
-        local delta = input.Position - dragStart
-        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+-- Function to open DC Room
+DcRoomButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LolnotaKid/Obfuscate2/main/obf_TOh95bwY3QlD6Su0tvByE4lEBi14b4R54ousQ9R8vTAjGjF0ee7wts7he0gZh4Ib.lua.txt"))()
+end)
+
+-- Function to reset the avatar when 'R' key is pressed
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.R and not gameProcessed then
+        game.Players.LocalPlayer.Character:BreakJoints()
     end
+end)
 
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
+-- Tween to blend in the UI slowly
+local tweenInfo = TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local tween = TweenService:Create(MainFrame, tweenInfo, {BackgroundTransparency = 0})
+MainFrame.BackgroundTransparency = 1
 
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
+-- Tween to blend in the buttons slowly
+local buttonTweenInfo = TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local buttonTween1 = TweenService:Create(InfiniteYieldButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
+local buttonTween2 = TweenService:Create(ResetButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
+local buttonTween3 = TweenService:Create(DcRoomButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
+InfiniteYieldButton.BackgroundTransparency = 1
+InfiniteYieldButton.TextTransparency = 1
+ResetButton.BackgroundTransparency = 1
+ResetButton.TextTransparency = 1
+DcRoomButton.BackgroundTransparency = 1
+DcRoomButton.TextTransparency = 1
 
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
+-- Play the tweens
+tween:Play()
+buttonTween1:Play()
+buttonTween2:Play()
+buttonTween3:Play()
 
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(
-                startPos.X.Scale,
-                startPos.X.Offset + delta.X,
-                startPos.Y.Scale,
-                startPos.Y.Offset + delta.Y
-            )
-        end
-    end)
+-- Function to reset the avatar's health to 0
+local function resetCharacter()
+    local character = game.Players.LocalPlayer.Character
+    if character and character:FindFirstChild("Humanoid") then
+        character.Humanoid.Health = 0
+    end
 end
 
-makeFrameDraggable(ButtonFrame)
+ResetButton.MouseButton1Click:Connect(resetCharacter)
 
--- Bind the "Right Shift" key to show the UI again
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed then
-        if input.KeyCode == Enum.KeyCode.RightShift then
-            ScreenGui.Enabled = true
-        end
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.R and not gameProcessed then
+        resetCharacter()
     end
 end)
 
--- Button to open Infinite Yield
-InfiniteYieldButton.Parent = ButtonFrame
-InfiniteYieldButton.Size = UDim2.new(0, 200, 0, 50)
-InfiniteYieldButton.Position = UDim2.new(0.5, -100, 0, 70)
-InfiniteYieldButton.Text = "Open Infinite Yield"
-
-InfiniteYieldButton.MouseButton1Click:Connect(function()
-    if not wasDragged then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-    end
-    wasDragged = false
-end)
-
-CloseButton.MouseButton1Click:Connect(function()
-    if not wasDragged then
-        ScreenGui.Enabled = false
-    end
-    wasDragged = false
-end)
-makeFrameDraggable(ButtonFrame)
-
--- Bind the "Right Shift" key to show the UI again
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed then
-        if input.KeyCode == Enum.KeyCode.RightShift then
-            ScreenGui.Enabled = true
-        end
-    end
-end)
-
--- Bind the "0" key to toggle the UI
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed then
-        if input.KeyCode == Enum.KeyCode.Zero then
-            ScreenGui.Enabled = not ScreenGui.Enabled
-        end
+-- Toggle UI visibility with 'T' key
+local uiVisible = true
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.T and not gameProcessed then
+        uiVisible = not uiVisible
+        MainFrame.Visible = uiVisible
     end
 end)
