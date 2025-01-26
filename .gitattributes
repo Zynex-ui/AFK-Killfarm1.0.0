@@ -33,6 +33,11 @@ ButtonFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
 ButtonFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 ButtonFrame.BorderSizePixel = 0
 
+-- Create a UICorner instance for smooth corners
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12) -- Adjust the corner radius as needed
+UICorner.Parent = ButtonFrame
+
 ResetButton.Parent = ButtonFrame
 ResetButton.Size = UDim2.new(0, 200, 0, 50)
 ResetButton.Position = UDim2.new(0.5, -100, 0, 10)
@@ -47,39 +52,23 @@ ResetButton.MouseButton1Click:Connect(function()
     wasDragged = false
 end)
 
--- Button to open Infinite Yield
-InfiniteYieldButton.Parent = ButtonFrame
-InfiniteYieldButton.Size = UDim2.new(0, 200, 0, 50)
-InfiniteYieldButton.Position = UDim2.new(0.5, -100, 0, 70)
-InfiniteYieldButton.Text = "Open Infinite Yield"
-
-InfiniteYieldButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-end)
-
--- Close button to hide the UI
-CloseButton.Parent = ButtonFrame
-CloseButton.Size = UDim2.new(0, 20, 0, 20)
-CloseButton.Position = UDim2.new(1, -25, 0, 5)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui.Enabled = false
-end)
-
--- Make the frame draggable
+-- Function to make a frame draggable
 local function makeFrameDraggable(frame)
-    local dragging = false
-    local dragInput, mousePos, framePos
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 
     frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
-            wasDragged = false
-            mousePos = input.Position
-            framePos = frame.Position
+            dragStart = input.Position
+            startPos = frame.Position
 
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
@@ -97,15 +86,12 @@ local function makeFrameDraggable(frame)
 
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
-            local delta = input.Position - mousePos
-            if delta.Magnitude > 5 then -- Threshold to consider it a drag
-                wasDragged = true
-            end
+            local delta = input.Position - dragStart
             frame.Position = UDim2.new(
-                framePos.X.Scale,
-                framePos.X.Offset + delta.X,
-                framePos.Y.Scale,
-                framePos.Y.Offset + delta.Y
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
             )
         end
     end)
@@ -120,4 +106,30 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
             ScreenGui.Enabled = true
         end
     end
+end)
+
+-- Button to open Infinite Yield
+InfiniteYieldButton.Parent = ButtonFrame
+InfiniteYieldButton.Size = UDim2.new(0, 200, 0, 50)
+InfiniteYieldButton.Position = UDim2.new(0.5, -100, 0, 70)
+InfiniteYieldButton.Text = "Open Infinite Yield"
+
+InfiniteYieldButton.MouseButton1Click:Connect(function()
+    if not wasDragged then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+    wasDragged = false
+end)
+
+-- Close button to hide the UI
+CloseButton.Parent = ButtonFrame
+CloseButton.Size = UDim2.new(0, 200, 0, 50)
+CloseButton.Position = UDim2.new(0.5, -100, 0, 130)
+CloseButton.Text = "Close UI"
+
+CloseButton.MouseButton1Click:Connect(function()
+    if not wasDragged then
+        ScreenGui.Enabled = false
+    end
+    wasDragged = false
 end)
