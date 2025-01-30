@@ -1,131 +1,174 @@
--- Create the main UI frame
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
+local Frame = Instance.new("Frame")
+local CloseButton = Instance.new("TextButton")
+
+ScreenGui.Name = "CompactUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = playerGui
+
+Frame.Name = "MainFrame"
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.Size = UDim2.new(0, 200, 0, 200)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -100)
+Frame.BackgroundTransparency = 0.5
+Frame.BorderSizePixel = 0
+Frame.ClipsDescendants = true
+Frame.Draggable = true
+Frame.Active = true
+Frame.Selectable = true
+
 local UICorner = Instance.new("UICorner")
-local InfiniteYieldButton = Instance.new("TextButton")
-local ResetButton = Instance.new("TextButton")
-local DcRoomButton = Instance.new("TextButton")
-local TweenService = game:GetService("TweenService")
+UICorner.CornerRadius = UDim.new(0, 9)
+UICorner.Parent = Frame
 
--- Set properties for ScreenGui
-ScreenGui.Name = "CustomUI"
-ScreenGui.Parent = game.CoreGui
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = Frame
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Size = UDim2.new(0, 20, 0, 20)
+CloseButton.Position = UDim2.new(1, -25, 0, 5)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextScaled = true
+CloseButton.BackgroundTransparency = 1
 
--- Set properties for MainFrame
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MainFrame.Position = UDim2.new(0.5, -100, 0.5, -75)
-MainFrame.Size = UDim2.new(0, 200, 0, 150)
-MainFrame.Active = true
-MainFrame.Draggable = true
-
--- Set properties for UICorner to make smooth edges
-UICorner.CornerRadius = UDim.new(0, 10)
-UICorner.Parent = MainFrame
-
--- Set properties for InfiniteYieldButton
-InfiniteYieldButton.Name = "InfiniteYieldButton"
-InfiniteYieldButton.Parent = MainFrame
-InfiniteYieldButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-InfiniteYieldButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
-InfiniteYieldButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-InfiniteYieldButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-InfiniteYieldButton.Font = Enum.Font.SourceSans
-InfiniteYieldButton.Text = "Infinite Yield"
-InfiniteYieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-InfiniteYieldButton.TextSize = 14
-
--- Set properties for ResetButton
-ResetButton.Name = "ResetButton"
-ResetButton.Parent = MainFrame
-ResetButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ResetButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
-ResetButton.Position = UDim2.new(0.1, 0, 0.4, 0)
-ResetButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-ResetButton.Font = Enum.Font.SourceSans
-ResetButton.Text = "Reset"
-ResetButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ResetButton.TextSize = 14
-
--- Set properties for DcRoomButton
-DcRoomButton.Name = "DcRoomButton"
-DcRoomButton.Parent = MainFrame
-DcRoomButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-DcRoomButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
-DcRoomButton.Position = UDim2.new(0.1, 0, 0.7, 0)
-DcRoomButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-DcRoomButton.Font = Enum.Font.SourceSans
-DcRoomButton.Text = "DC Room"
-DcRoomButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-DcRoomButton.TextSize = 14
-
--- Function to open Infinite Yield
-InfiniteYieldButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+CloseButton.MouseButton1Click:Connect(function()
+    Frame.Visible = false
 end)
+Frame.Visible = false
+Frame.Position = UDim2.new(0.5, -100, 0.5, -100)
+Frame.Size = UDim2.new(0, 0, 0, 0)
 
--- Function to reset the avatar
-ResetButton.MouseButton1Click:Connect(function()
-    game.Players.LocalPlayer.Character:BreakJoints()
-end)
+wait(1)
 
--- Function to open DC Room
-DcRoomButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LolnotaKid/Obfuscate2/main/obf_TOh95bwY3QlD6Su0tvByE4lEBi14b4R54ousQ9R8vTAjGjF0ee7wts7he0gZh4Ib.lua.txt"))()
-end)
+Frame.Visible = true
+Frame:TweenSizeAndPosition(
+    UDim2.new(0, 200, 0, 200),
+    UDim2.new(0.5, -100, 0.5, -100),
+    Enum.EasingDirection.Out,
+    Enum.EasingStyle.Quad,
+    3,
+    true,
+    function()
+        local TextLabel = Instance.new("TextLabel")
+        TextLabel.Name = "InfoLabel"
+        TextLabel.Parent = Frame
+        TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.Size = UDim2.new(1, 0, 0, 20)
+        TextLabel.Position = UDim2.new(0, 0, 0, 5)
+        TextLabel.Text = ""
+        TextLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        TextLabel.TextScaled = true
+        TextLabel.Font = Enum.Font.SourceSans
 
--- Function to reset the avatar when 'R' key is pressed
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+        local text = "Not made by Me"
+        coroutine.wrap(function()
+            for i = 1, #text do
+                TextLabel.Text = string.sub(text, 1, i)
+                wait(0.1)
+            end
+        end)()
+
+        -- Create the coordLabel once
+        local coordLabel = Instance.new("TextLabel")
+        coordLabel.Name = "CoordLabel"
+        coordLabel.Parent = ScreenGui
+        coordLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        coordLabel.BackgroundTransparency = 0.5
+        coordLabel.Size = UDim2.new(0, 200, 0, 50)
+        coordLabel.Position = UDim2.new(0.5, -100, 0.1, 0)
+        coordLabel.Text = "Coordinates: "
+        coordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        coordLabel.TextScaled = true
+        coordLabel.Font = Enum.Font.SourceSans
+        coordLabel.Visible = false
+
+        local coordLabelUICorner = Instance.new("UICorner")
+        coordLabelUICorner.CornerRadius = UDim.new(0, 9)
+        coordLabelUICorner.Parent = coordLabel
+
+        -- Adding four buttons with smooth edges and delayed appearance
+        coroutine.wrap(function()
+            for i = 1, 4 do
+                local button = Instance.new("TextButton")
+                button.Name = "Button" .. i
+                button.Parent = Frame
+                button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                button.Size = UDim2.new(0, 80, 0, 40)
+                button.Position = UDim2.new((i-1) % 2 * 0.5, 10, math.floor((i-1) / 2) * 0.5, 40) -- Adjusted Y offset
+                button.Text = "Button " .. i
+                button.TextColor3 = Color3.fromRGB(0, 0, 0)
+                button.TextScaled = true
+                button.BackgroundTransparency = 0.5
+                button.Font = Enum.Font.Gotham -- Set the font to Gotham
+
+                local buttonUICorner = Instance.new("UICorner")
+                buttonUICorner.CornerRadius = UDim.new(0, 9)
+                buttonUICorner.Parent = button
+
+                button.Visible = false
+                wait(0.5)
+                button.Visible = true
+
+                if i == 1 then
+                    button.Text = "Infinite Yield"
+                    button.MouseButton1Click:Connect(function()
+                        -- Code to open Infinite Yield
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+                    end)
+                elseif i == 2 then
+                    button.Text = "R for Reset"
+                    button.MouseButton1Click:Connect(function()
+                        -- Code to reset character
+                        local character = player.Character
+                        if character then
+                            character:BreakJoints()
+                        end
+                    end)
+                elseif i == 3 then
+                    button.Text = "Platform"
+                    button.MouseButton1Click:Connect(function()
+                        -- Code to teleport character to specified coordinates
+                        local character = player.Character
+                        if character then
+                            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                            if humanoidRootPart then
+                                humanoidRootPart.CFrame = CFrame.new(945, 405, 22729)
+                            end
+                        end
+                    end)
+                elseif i == 4 then
+                    button.Text = "DC room"
+                    button.MouseButton1Click:Connect(function()
+                        -- Code to teleport character to specified coordinates
+                        local character = player.Character
+                        if character then
+                            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                            if humanoidRootPart then
+                                humanoidRootPart.CFrame = CFrame.new(-106, 29, 20343)
+                            end
+                        end
+                    end)
+                end
+            end
+        end)()
+    end
+)
+
+-- Listen for the "R" key press to reset the character's health to 0
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.R and not gameProcessed then
-        game.Players.LocalPlayer.Character:BreakJoints()
-    end
-end)
-
--- Tween to blend in the UI slowly
-local tweenInfo = TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tween = TweenService:Create(MainFrame, tweenInfo, {BackgroundTransparency = 0})
-MainFrame.BackgroundTransparency = 1
-
--- Tween to blend in the buttons slowly
-local buttonTweenInfo = TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local buttonTween1 = TweenService:Create(InfiniteYieldButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
-local buttonTween2 = TweenService:Create(ResetButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
-local buttonTween3 = TweenService:Create(DcRoomButton, buttonTweenInfo, {BackgroundTransparency = 0, TextTransparency = 0})
-InfiniteYieldButton.BackgroundTransparency = 1
-InfiniteYieldButton.TextTransparency = 1
-ResetButton.BackgroundTransparency = 1
-ResetButton.TextTransparency = 1
-DcRoomButton.BackgroundTransparency = 1
-DcRoomButton.TextTransparency = 1
-
--- Play the tweens
-tween:Play()
-buttonTween1:Play()
-buttonTween2:Play()
-buttonTween3:Play()
-
--- Function to reset the avatar's health to 0
-local function resetCharacter()
-    local character = game.Players.LocalPlayer.Character
-    if character and character:FindFirstChild("Humanoid") then
-        character.Humanoid.Health = 0
-    end
-end
-
-ResetButton.MouseButton1Click:Connect(resetCharacter)
-
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if input.KeyCode == Enum.KeyCode.R and not gameProcessed then
-        resetCharacter()
-    end
-end)
-
--- Toggle UI visibility with 'T' key
-local uiVisible = true
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if input.KeyCode == Enum.KeyCode.T and not gameProcessed then
-        uiVisible = not uiVisible
-        MainFrame.Visible = uiVisible
+        local character = player.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.Health = 0
+            end
+        end
     end
 end)
